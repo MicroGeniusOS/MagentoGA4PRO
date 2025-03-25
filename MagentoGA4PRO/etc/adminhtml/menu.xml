@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magento_GA4Pro::ga4pro" title="GA4 Analytics" translate="title" module="Magento_GA4Pro" sortOrder="50" parent="Magento_Backend::marketing" resource="Magento_GA4Pro::ga4pro"/>
+        <add id="Magento_GA4Pro::dashboard" title="Dashboard" translate="title" module="Magento_GA4Pro" sortOrder="10" parent="Magento_GA4Pro::ga4pro" action="ga4pro/dashboard" resource="Magento_GA4Pro::dashboard"/>
+        <add id="Magento_GA4Pro::export" title="Data Export" translate="title" module="Magento_GA4Pro" sortOrder="20" parent="Magento_GA4Pro::ga4pro" action="ga4pro/export/run" resource="Magento_GA4Pro::export"/>
+        <add id="Magento_GA4Pro::configuration" title="Configuration" translate="title" module="Magento_GA4Pro" sortOrder="30" parent="Magento_GA4Pro::ga4pro" action="adminhtml/system_config/edit/section/magento_ga4pro" resource="Magento_GA4Pro::config"/>
+    </menu>
+</config>

@@ -1,0 +1,72 @@
+<?php
+/**
+ * Test connection button template
+ *
+ * @var \Magento\GA4Pro\Block\Adminhtml\System\Config\TestConnection $block
+ */
+?>
+<div class="ga4pro-test-connection">
+    <button type="button"
+            class="action-default scalable"
+            id="<?= $block->getHtmlId() ?>">
+        <span><?= $block->escapeHtml($block->getButtonLabel()) ?></span>
+    </button>
+</div>
+
+<div id="ga4pro-test-connection-result" style="margin-top: 10px; display: none;">
+    <div class="message message-success success" style="display: none;">
+        <div id="ga4pro-test-connection-success"></div>
+    </div>
+    <div class="message message-error error" style="display: none;">
+        <div id="ga4pro-test-connection-error"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+require(['jquery'], function($) {
+    $('#<?= $block->getHtmlId() ?>').click(function() {
+        var measurementId = $('#magento_ga4pro_general_measurement_id').val();
+        var apiSecret = $('#magento_ga4pro_general_api_secret').val();
+        var debugMode = $('#magento_ga4pro_general_debug_mode').val();
+        
+        if (!measurementId) {
+            $('#ga4pro-test-connection-error').text(<?= json_encode(__('Please enter a Measurement ID before testing the connection')) ?>);
+            $('#ga4pro-test-connection-result .success').hide();
+            $('#ga4pro-test-connection-result .error').show();
+            $('#ga4pro-test-connection-result').show();
+            return;
+        }
+        
+        $.ajax({
+            url: '<?= $block->getUrl('ga4pro/test/connection') ?>',
+            data: {
+                measurement_id: measurementId,
+                api_secret: apiSecret,
+                debug_mode: debugMode
+            },
+            type: 'GET',
+            dataType: 'json',
+            showLoader: true,
+            success: function(response) {
+                $('#ga4pro-test-connection-result').show();
+                
+                if (response.success) {
+                    $('#ga4pro-test-connection-success').text(response.message);
+                    $('#ga4pro-test-connection-result .success').show();
+                    $('#ga4pro-test-connection-result .error').hide();
+                } else {
+                    $('#ga4pro-test-connection-error').text(response.message || <?= json_encode(__('Unknown error occurred during connection test')) ?>);
+                    $('#ga4pro-test-connection-result .success').hide();
+                    $('#ga4pro-test-connection-result .error').show();
+                }
+            },
+            error: function() {
+                $('#ga4pro-test-connection-result').show();
+                $('#ga4pro-test-connection-error').text(<?= json_encode(__('Error occurred while testing connection')) ?>);
+                $('#ga4pro-test-connection-result .success').hide();
+                $('#ga4pro-test-connection-result .error').show();
+            }
+        });
+    });
+});
+</script>

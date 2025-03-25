@@ -1,0 +1,152 @@
+<?php
+/**
+ * GA4Pro Analytics Dashboard Overview Template
+ *
+ * @var $block \Magento\GA4Pro\Block\Adminhtml\Dashboard\Overview
+ */
+?>
+
+<div class="ga4pro-dashboard">
+    <div class="ga4pro-dashboard-header">
+        <h2><?= __('GA4 Analytics Dashboard') ?></h2>
+        <?php if ($block->isConfigured()): ?>
+            <a href="<?= $block->getGa4DashboardUrl() ?>" target="_blank" class="action-secondary">
+                <?= __('Open GA4 in Google Analytics') ?>
+            </a>
+        <?php endif; ?>
+    </div>
+    
+    <div class="ga4pro-dashboard-status">
+        <h3><?= __('Tracking Status') ?></h3>
+        <?php $status = $block->getTrackingStatus(); ?>
+        <div class="ga4pro-status-container">
+            <div class="ga4pro-status-item">
+                <span class="ga4pro-status-label"><?= __('GA4 Tracking') ?>:</span>
+                <span class="ga4pro-status-value <?= $status['enabled'] ? 'enabled' : 'disabled' ?>">
+                    <?= $status['enabled'] ? __('Enabled') : __('Disabled') ?>
+                </span>
+            </div>
+            <div class="ga4pro-status-item">
+                <span class="ga4pro-status-label"><?= __('Measurement ID') ?>:</span>
+                <span class="ga4pro-status-value">
+                    <?= $status['measurement_id'] ?: __('Not configured') ?>
+                </span>
+            </div>
+            <div class="ga4pro-status-item">
+                <span class="ga4pro-status-label"><?= __('API Secret') ?>:</span>
+                <span class="ga4pro-status-value <?= $status['api_secret'] ? 'enabled' : 'disabled' ?>">
+                    <?= $status['api_secret'] ? __('Configured') : __('Not configured') ?>
+                </span>
+            </div>
+            <div class="ga4pro-status-item">
+                <span class="ga4pro-status-label"><?= __('Enhanced E-commerce') ?>:</span>
+                <span class="ga4pro-status-value <?= $status['enhanced_ecommerce'] ? 'enabled' : 'disabled' ?>">
+                    <?= $status['enhanced_ecommerce'] ? __('Enabled') : __('Disabled') ?>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="ga4pro-dashboard-tracked-events">
+        <h3><?= __('Tracked Events') ?></h3>
+        <?php if (!empty($status['tracked_events'])): ?>
+            <ul class="ga4pro-event-list">
+                <?php foreach ($status['tracked_events'] as $event): ?>
+                    <li class="ga4pro-event-item"><?= $event ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p><?= __('No events are currently being tracked.') ?></p>
+        <?php endif; ?>
+    </div>
+    
+    <?php if (!$block->isConfigured()): ?>
+        <div class="ga4pro-dashboard-configuration-tips">
+            <h3><?= __('Configuration Tips') ?></h3>
+            <ul class="ga4pro-tips-list">
+                <?php foreach ($block->getConfigurationTips() as $tip): ?>
+                    <li class="ga4pro-tip-item"><?= $tip ?></li>
+                <?php endforeach; ?>
+            </ul>
+            <a href="<?= $block->getUrl('adminhtml/system_config/edit/section/magento_ga4pro') ?>" class="action-primary">
+                <?= __('Configure GA4 Settings') ?>
+            </a>
+        </div>
+    <?php endif; ?>
+    
+    <!-- Data Export Section -->
+    <div class="ga4pro-dashboard-data-export">
+        <h3><?= __('Data Export') ?></h3>
+        <div class="ga4pro-export-container">
+            <form action="<?= $block->getUrl('ga4pro/export/run') ?>" method="post">
+                <input name="form_key" type="hidden" value="<?= $block->getFormKey() ?>" />
+                
+                <div class="field">
+                    <label for="export_format" class="label"><?= __('Export Format') ?></label>
+                    <div class="control">
+                        <select id="export_format" name="format" class="select">
+                            <option value="json"><?= __('JSON') ?></option>
+                            <option value="csv"><?= __('CSV') ?></option>
+                            <option value="xml"><?= __('XML') ?></option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <label for="date_range" class="label"><?= __('Date Range') ?></label>
+                    <div class="control">
+                        <select id="date_range" name="date_range" class="select">
+                            <option value="7days"><?= __('Last 7 Days') ?></option>
+                            <option value="30days"><?= __('Last 30 Days') ?></option>
+                            <option value="90days"><?= __('Last 90 Days') ?></option>
+                            <option value="custom"><?= __('Custom Range') ?></option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="field custom-date-range" style="display: none;">
+                    <label for="date_from" class="label"><?= __('From') ?></label>
+                    <div class="control">
+                        <input type="text" id="date_from" name="date_from" class="input-text" />
+                    </div>
+                </div>
+                
+                <div class="field custom-date-range" style="display: none;">
+                    <label for="date_to" class="label"><?= __('To') ?></label>
+                    <div class="control">
+                        <input type="text" id="date_to" name="date_to" class="input-text" />
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button type="submit" class="action-primary">
+                        <span><?= __('Export Data') ?></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+require(['jquery', 'mage/calendar'], function($) {
+    'use strict';
+    
+    $(document).ready(function() {
+        // Toggle custom date range fields based on date range selection
+        $('#date_range').change(function() {
+            if ($(this).val() === 'custom') {
+                $('.custom-date-range').show();
+            } else {
+                $('.custom-date-range').hide();
+            }
+        });
+        
+        // Initialize date pickers
+        $('#date_from, #date_to').calendar({
+            showsTime: false,
+            dateFormat: 'yyyy-MM-dd'
+        });
+    });
+});
+</script>

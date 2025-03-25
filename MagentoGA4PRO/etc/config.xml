@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <magento_ga4pro>
+            <general>
+                <enabled>0</enabled>
+                <measurement_id></measurement_id>
+                <api_secret></api_secret>
+                <debug_mode>0</debug_mode>
+            </general>
+            <events>
+                <track_pageviews>1</track_pageviews>
+                <track_product_views>1</track_product_views>
+                <track_add_to_cart>1</track_add_to_cart>
+                <track_checkout>1</track_checkout>
+                <track_purchases>1</track_purchases>
+            </events>
+            <enhanced>
+                <enable_enhanced>1</enable_enhanced>
+                <include_tax>1</include_tax>
+                <include_shipping>1</include_shipping>
+            </enhanced>
+        </magento_ga4pro>
+    </default>
+</config>

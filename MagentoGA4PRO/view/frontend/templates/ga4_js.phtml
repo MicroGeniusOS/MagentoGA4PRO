@@ -1,0 +1,162 @@
+<?php
+/**
+ * Google Analytics 4 tracking code template
+ */
+?>
+<?php if ($block->isGa4Enabled()): ?>
+<!-- Google Analytics 4 tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?= $block->escapeJs($block->getMeasurementId()) ?>"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '<?= $block->escapeJs($block->getMeasurementId()) ?>', {
+        <?php if ($block->isDebugMode()): ?>
+        'debug_mode': true,
+        <?php endif; ?>
+        'send_page_view': <?= $block->isTrackPageViewsEnabled() ? 'true' : 'false' ?>,
+        'anonymize_ip': true
+    });
+
+    // Add user data if available
+    <?php if ($block->getCustomerData()): ?>
+    gtag('set', 'user_properties', <?= /* @noEscape */ $block->getCustomerData() ?>);
+    <?php endif; ?>
+
+    // Execute any pending GTM commands
+    <?php if ($block->isPendingQueueEnabled()): ?>
+    if (window.ga4ProPendingCommands && window.ga4ProPendingCommands.length) {
+        for (var i = 0; i < window.ga4ProPendingCommands.length; i++) {
+            var command = window.ga4ProPendingCommands[i];
+            gtag.apply(null, command);
+        }
+        window.ga4ProPendingCommands = [];
+    }
+    <?php endif; ?>
+
+    // Define GA4Pro object for global access
+    window.GA4Pro = {
+        /**
+         * Track a custom event
+         * 
+         * @param {string} eventName - The name of the event to track
+         * @param {object} eventParams - Optional parameters for the event
+         */
+        trackEvent: function(eventName, eventParams) {
+            gtag('event', eventName, eventParams || {});
+            <?php if ($block->isDebugMode()): ?>
+            console.log('[GA4Pro] Event tracked:', eventName, eventParams || {});
+            <?php endif; ?>
+        },
+
+        /**
+         * Track a product view
+         * 
+         * @param {object} product - The product data to track
+         */
+        trackProductView: function(product) {
+            if (!product || !product.id) {
+                return;
+            }
+
+            var itemData = {
+                item_id: product.id,
+                item_name: product.name || '',
+                price: product.price || 0
+            };
+
+            if (product.category) {
+                itemData.item_category = product.category;
+            }
+
+            if (product.variant) {
+                itemData.item_variant = product.variant;
+            }
+
+            gtag('event', 'view_item', {
+                currency: '<?= $block->escapeJs($block->getCurrencyCode()) ?>',
+                value: parseFloat(product.price) || 0,
+                items: [itemData]
+            });
+
+            <?php if ($block->isDebugMode()): ?>
+            console.log('[GA4Pro] Product view tracked:', itemData);
+            <?php endif; ?>
+        },
+
+        /**
+         * Track add to cart action
+         * 
+         * @param {object} product - The product data
+         * @param {number} quantity - The quantity added
+         */
+        trackAddToCart: function(product, quantity) {
+            if (!product || !product.id) {
+                return;
+            }
+
+            quantity = quantity || 1;
+            var price = parseFloat(product.price) || 0;
+
+            var itemData = {
+                item_id: product.id,
+                item_name: product.name || '',
+                price: price,
+                quantity: quantity
+            };
+
+            if (product.category) {
+                itemData.item_category = product.category;
+            }
+
+            if (product.variant) {
+                itemData.item_variant = product.variant;
+            }
+
+            gtag('event', 'add_to_cart', {
+                currency: '<?= $block->escapeJs($block->getCurrencyCode()) ?>',
+                value: price * quantity,
+                items: [itemData]
+            });
+
+            <?php if ($block->isDebugMode()): ?>
+            console.log('[GA4Pro] Add to cart tracked:', itemData, 'Quantity:', quantity);
+            <?php endif; ?>
+        },
+
+        /**
+         * Track checkout step
+         * 
+         * @param {number} step - The checkout step number
+         * @param {string} option - The checkout option (e.g., "Shipping Method", "Payment Method")
+         * @param {array} items - The items in the cart
+         */
+        trackCheckoutStep: function(step, option, items) {
+            if (!items || !items.length) {
+                return;
+            }
+
+            var totalValue = 0;
+            for (var i = 0; i < items.length; i++) {
+                totalValue += (parseFloat(items[i].price) * items[i].quantity);
+            }
+
+            gtag('event', 'begin_checkout', {
+                currency: '<?= $block->escapeJs($block->getCurrencyCode()) ?>',
+                value: totalValue,
+                items: items,
+                checkout_step: step,
+                checkout_option: option
+            });
+
+            <?php if ($block->isDebugMode()): ?>
+            console.log('[GA4Pro] Checkout step tracked:', step, option, items);
+            <?php endif; ?>
+        }
+    };
+
+    <?php if ($block->isDebugMode()): ?>
+    console.log('[GA4Pro] Initialized with measurement ID: <?= $block->escapeJs($block->getMeasurementId()) ?>');
+    <?php endif; ?>
+</script>
+<?php endif; ?>

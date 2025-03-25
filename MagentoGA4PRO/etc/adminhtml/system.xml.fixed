@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="ga4pro" translate="label" sortOrder="500">
+            <label>GA4 Pro Analytics</label>
+        </tab>
+        <section id="magento_ga4pro" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>GA4 Pro Configuration</label>
+            <tab>ga4pro</tab>
+            <resource>Magento_GA4Pro::system_config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable GA4 Tracking</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="measurement_id" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Measurement ID</label>
+                    <comment>Your GA4 Measurement ID (G-XXXXXXXXXX)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="api_secret" translate="label comment" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>API Secret</label>
+                    <comment>Your GA4 API Secret for server-side events</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="test_connection" translate="button_label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label></label>
+                    <button_label>Test Connection</button_label>
+                    <frontend_model>Magento\GA4Pro\Block\Adminhtml\System\Config\TestConnection</frontend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="measurement_id" separator=",">notEmpty</field>
+                        <field id="api_secret" separator=",">notEmpty</field>
+                    </depends>
+                </field>
+                <field id="debug_mode" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Debug Mode</label>
+                    <comment>When enabled, detailed logging information will be available in browser console</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            
+            <group id="events" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Event Tracking</label>
+                <depends>
+                    <field id="magento_ga4pro/general/enabled">1</field>
+                </depends>
+                <field id="track_pageviews" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Page Views</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="track_product_views" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Product Views</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="track_add_to_cart" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Add to Cart</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="track_checkout" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Checkout Steps</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="track_purchases" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Purchases</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            
+            <group id="enhanced" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enhanced Ecommerce</label>
+                <depends>
+                    <field id="magento_ga4pro/general/enabled">1</field>
+                </depends>
+                <field id="enable_enhanced" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Enhanced Ecommerce</label>
+                    <comment>Provides detailed product and transaction data</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="include_tax" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Include Tax in Revenue</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enable_enhanced">1</field>
+                    </depends>
+                </field>
+                <field id="include_shipping" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Include Shipping in Revenue</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enable_enhanced">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="custom_events" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Custom Events</label>
+                <depends>
+                    <field id="magento_ga4pro/general/enabled">1</field>
+                </depends>
+                <field id="enable_custom_events" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Custom Events</label>
+                    <comment>Allow tracking of custom events defined below</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="custom_events_config" translate="label comment" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Custom Events Configuration</label>
+                    <comment>JSON format configuration for custom events. See documentation for format details.</comment>
+                    <depends>
+                        <field id="enable_custom_events">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="data_management" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Data Import/Export</label>
+                <depends>
+                    <field id="magento_ga4pro/general/enabled">1</field>
+                </depends>
+                <field id="enable_import_export" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Data Import/Export</label>
+                    <comment>Allow exporting GA4 data to files and importing external data</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="export_format" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Export Format</label>
+                    <source_model>Magento\GA4Pro\Model\Config\Source\ExportFormat</source_model>
+                    <depends>
+                        <field id="enable_import_export">1</field>
+                    </depends>
+                </field>
+                <field id="export_frequency" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Export Frequency</label>
+                    <comment>How often data should be automatically exported</comment>
+                    <source_model>Magento\GA4Pro\Model\Config\Source\ExportFrequency</source_model>
+                    <depends>
+                        <field id="enable_import_export">1</field>
+                    </depends>
+                </field>
+                <field id="export_path" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Export Directory Path</label>
+                    <comment>Directory path where exported files will be saved (must be writable)</comment>
+                    <depends>
+                        <field id="enable_import_export">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

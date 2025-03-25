@@ -1,0 +1,81 @@
+<?php
+/**
+ * Google Analytics 4 information template
+ * 
+ * This template is for demonstration purposes and would not typically
+ * be included in a production environment.
+ */
+?>
+<?php if ($block->isGa4Enabled()): ?>
+<div class="ga4pro-info-box" style="margin: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background: #f8f8f8;">
+    <h3>GA4Pro Analytics is Active</h3>
+    <p>Google Analytics 4 tracking is currently enabled on this page with the following configuration:</p>
+    
+    <div style="margin: 10px 0; padding: 10px; background: #fff; border-radius: 3px; border: 1px solid #eee;">
+        <ul style="list-style-type: none; padding-left: 10px;">
+            <li><strong>Measurement ID:</strong> <?= $block->escapeHtml($block->getMeasurementId()) ?></li>
+            <li><strong>Debug Mode:</strong> <?= $block->isDebugMode() ? 'Enabled' : 'Disabled' ?></li>
+            <li><strong>Page View Tracking:</strong> <?= $block->isTrackPageViewsEnabled() ? 'Enabled' : 'Disabled' ?></li>
+            <li><strong>Currency:</strong> <?= $block->escapeHtml($block->getCurrencyCode()) ?></li>
+        </ul>
+    </div>
+    
+    <h4>Available Tracking Methods</h4>
+    <p>The following JavaScript methods are available for custom tracking:</p>
+    
+    <pre style="background: #333; color: #fff; padding: 10px; border-radius: 3px; overflow-x: auto;">
+// Track a custom event
+window.GA4Pro.trackEvent('event_name', {
+    param1: 'value1',
+    param2: 'value2'
+});
+
+// Track a product view
+window.GA4Pro.trackProductView({
+    id: 'SKU123',
+    name: 'Product Name',
+    price: 99.99,
+    category: 'Category Name',
+    variant: 'Variant Name'
+});
+
+// Track add to cart
+window.GA4Pro.trackAddToCart({
+    id: 'SKU123',
+    name: 'Product Name',
+    price: 99.99,
+    category: 'Category Name'
+}, 2); // quantity = 2
+
+// Track checkout step
+window.GA4Pro.trackCheckoutStep(1, 'Shipping Information', [
+    {
+        item_id: 'SKU123',
+        item_name: 'Product Name',
+        price: 99.99,
+        quantity: 2
+    }
+]);
+</pre>
+
+    <div style="margin-top: 15px;">
+        <p><small>Note: This information block is for demonstration purposes only and should be removed in production.</small></p>
+        <?php if ($block->isDebugMode()): ?>
+        <p><small>Debug mode is enabled. View your browser console to see detailed tracking information.</small></p>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script>
+    // Example of tracking a page view event for demonstration
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.GA4Pro) {
+            // Example of a custom event
+            window.GA4Pro.trackEvent('demo_page_loaded', {
+                page_path: window.location.pathname,
+                demo_view: true
+            });
+        }
+    });
+</script>
+<?php endif; ?>

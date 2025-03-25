@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>GA4 Analytics Dashboard</title>
+        <css src="Magento_GA4Pro::css/dashboard.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\GA4Pro\Block\Adminhtml\Dashboard\Overview" name="ga4pro_dashboard_overview" template="Magento_GA4Pro::dashboard/overview.phtml" />
+        </referenceContainer>
+    </body>
+</page>
